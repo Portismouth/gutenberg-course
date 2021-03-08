@@ -8,9 +8,9 @@ registerBlockType("mytheme-blocks/firstblock", {
   icon: "admin-network",
   keywords: [__("photo", "mytheme-blocks"), __("image", "mytheme-blocks")],
   edit: function () {
-    return <p>Editor</p>;
+return <p>Editor</p>;
   },
   save: function () {
-    return <p>Saved Changes</p>;
+return <p>Saved Changes</p>;
   },
 });

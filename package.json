@@ -8,7 +8,8 @@
     "format": "prettier --write \"**/*.{js,json,css,scss}\"",
     "lint": "eslint src",
     "start": "webpack --mode=development --watch",
-    "build": "npm run lint && webpack --mode=production && gulp bundle"
+    "build": "npm run lint && webpack --mode=production && gulp bundle",
+    "prepare": "husky install"
   },
   "husky": {
     "hooks": {
