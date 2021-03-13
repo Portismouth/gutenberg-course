@@ -33,7 +33,9 @@ function mytheme_blocks_register()
     array(
       'wp-blocks',
       'wp-i18n',
-      'wp-element'
+      'wp-element',
+      'wp-components',
+      'wp-block-editor'
     )
   );
 

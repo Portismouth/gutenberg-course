@@ -85,6 +85,8 @@ module.exports = (env, argv) => {
       jquery: "jQuery",
       "@wordpress/blocks": ["wp", "blocks"],
       "@wordpress/i18n": ["wp", "i18n"],
+      "@wordpress/block-editor": ["wp", "blockEditor"],
+      "@wordpress/components": ["wp", "components"],
     },
   };
 

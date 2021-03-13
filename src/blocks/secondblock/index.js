@@ -1,6 +1,13 @@
 import "./styles.editor.scss";
 const { registerBlockType } = wp.blocks;
 const { __ } = wp.i18n;
+import {
+  RichText,
+  BlockControls,
+  AlignmentToolbar,
+  InspectorControls,
+  PanelColorSettings,
+} from "@wordpress/block-editor";
 
 registerBlockType("mytheme-blocks/secondblock", {
   title: __("Second Block", "mytheme-blocks"),
@@ -18,10 +25,100 @@ registerBlockType("mytheme-blocks/secondblock", {
     </svg>
   ),
   keywords: [__("photo", "mytheme-blocks"), __("image", "mytheme-blocks")],
-  edit: ({ className }) => {
-    return <p className={className}>Editor</p>;
+  styles: [
+    // Mark style as default.
+    {
+      name: "default",
+      label: __("Rounded"),
+      isDefault: true,
+    },
+    {
+      name: "outline",
+      label: __("Outline"),
+    },
+    {
+      name: "squared",
+      label: __("Squared"),
+    },
+  ],
+  attributes: {
+    content: {
+      type: "string",
+      source: "html",
+      selector: "p",
+    },
+    alignment: {
+      type: "string",
+    },
+    backgroundColor: {
+      type: "string",
+    },
+    textColor: {
+      type: "string",
+    },
   },
-  save: () => {
-    return <p>Saved Content</p>;
+  edit: ({ className, attributes, setAttributes }) => {
+    const { content, alignment, backgroundColor, textColor } = attributes;
+    const onChangeContent = (content) => {
+      setAttributes({ content });
+    };
+    const onChangeAlignment = (alignment) => {
+      setAttributes({ alignment });
+    };
+    const onChangeBackgroundColor = (backgroundColor) => {
+      setAttributes({ backgroundColor });
+    };
+    const onChangeTextColor = (textColor) => {
+      setAttributes({ textColor });
+    };
+    return (
+      <>
+        <InspectorControls>
+          <PanelColorSettings
+            title={__("Panel", "mytheme-blocks")}
+            colorSettings={[
+              {
+                value: backgroundColor,
+                onChange: onChangeBackgroundColor,
+                label: __("Background Color", "mytheme-blocks"),
+              },
+              {
+                value: textColor,
+                onChange: onChangeTextColor,
+                label: __("Text Color", "mytheme-blocks"),
+              },
+            ]}
+          />
+        </InspectorControls>
+        <BlockControls>
+          <AlignmentToolbar onChange={onChangeAlignment} value={alignment} />
+        </BlockControls>
+        <RichText
+          tagName="p"
+          className={className}
+          onChange={onChangeContent}
+          value={content}
+          style={{
+            textAlign: alignment,
+            backgroundColor: backgroundColor,
+            color: textColor,
+          }}
+        />
+      </>
+    );
+  },
+  save: ({ attributes }) => {
+    const { content, alignment, backgroundColor, textColor } = attributes;
+    return (
+      <RichText.Content
+        tagName="p"
+        value={content}
+        style={{
+          textAlign: alignment,
+          backgroundColor: backgroundColor,
+          color: textColor,
+        }}
+      />
+    );
   },
 });
