@@ -35,7 +35,8 @@ function mytheme_blocks_register()
       'wp-i18n',
       'wp-element',
       'wp-components',
-      'wp-block-editor'
+      'wp-block-editor',
+      'lodash'
     )
   );
 

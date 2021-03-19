@@ -1,13 +1,12 @@
 import "./styles.editor.scss";
-const { registerBlockType } = wp.blocks;
 const { __ } = wp.i18n;
-import {
-  RichText,
-  BlockControls,
-  AlignmentToolbar,
-  InspectorControls,
-  PanelColorSettings,
-} from "@wordpress/block-editor";
+import { registerBlockType } from "@wordpress/blocks";
+import { RichText, getColorClassName } from "@wordpress/block-editor";
+import Edit from "./edit";
+import classnames from "classnames";
+import deprecated from "./deprecated";
+import attributes from "./block-attributes";
+import transforms from "./transforms";
 
 registerBlockType("mytheme-blocks/secondblock", {
   title: __("Second Block", "mytheme-blocks"),
@@ -25,98 +24,43 @@ registerBlockType("mytheme-blocks/secondblock", {
     </svg>
   ),
   keywords: [__("photo", "mytheme-blocks"), __("image", "mytheme-blocks")],
-  styles: [
-    // Mark style as default.
-    {
-      name: "default",
-      label: __("Rounded"),
-      isDefault: true,
-    },
-    {
-      name: "outline",
-      label: __("Outline"),
-    },
-    {
-      name: "squared",
-      label: __("Squared"),
-    },
-  ],
-  attributes: {
-    content: {
-      type: "string",
-      source: "html",
-      selector: "p",
-    },
-    alignment: {
-      type: "string",
-    },
-    backgroundColor: {
-      type: "string",
-    },
-    textColor: {
-      type: "string",
-    },
-  },
-  edit: ({ className, attributes, setAttributes }) => {
-    const { content, alignment, backgroundColor, textColor } = attributes;
-    const onChangeContent = (content) => {
-      setAttributes({ content });
-    };
-    const onChangeAlignment = (alignment) => {
-      setAttributes({ alignment });
-    };
-    const onChangeBackgroundColor = (backgroundColor) => {
-      setAttributes({ backgroundColor });
-    };
-    const onChangeTextColor = (textColor) => {
-      setAttributes({ textColor });
-    };
-    return (
-      <>
-        <InspectorControls>
-          <PanelColorSettings
-            title={__("Panel", "mytheme-blocks")}
-            colorSettings={[
-              {
-                value: backgroundColor,
-                onChange: onChangeBackgroundColor,
-                label: __("Background Color", "mytheme-blocks"),
-              },
-              {
-                value: textColor,
-                onChange: onChangeTextColor,
-                label: __("Text Color", "mytheme-blocks"),
-              },
-            ]}
-          />
-        </InspectorControls>
-        <BlockControls>
-          <AlignmentToolbar onChange={onChangeAlignment} value={alignment} />
-        </BlockControls>
-        <RichText
-          tagName="p"
-          className={className}
-          onChange={onChangeContent}
-          value={content}
-          style={{
-            textAlign: alignment,
-            backgroundColor: backgroundColor,
-            color: textColor,
-          }}
-        />
-      </>
-    );
-  },
+  attributes,
+  deprecated,
+  transforms,
+  edit: Edit,
   save: ({ attributes }) => {
-    const { content, alignment, backgroundColor, textColor } = attributes;
+    const {
+      content,
+      textAlignment,
+      backgroundColor,
+      textColor,
+      customTextColor,
+      customBackgroundColor,
+      shadow,
+      shadowOpacity,
+    } = attributes;
+    const backgroundClass = getColorClassName(
+      "background-color",
+      backgroundColor
+    );
+    const textClass = getColorClassName("color", textColor);
+
+    const classes = classnames({
+      [backgroundClass]: backgroundClass,
+      [textClass]: textClass,
+      "has-shadow": shadow,
+      [`shadow-opacity-${shadowOpacity * 100}`]: shadowOpacity,
+    });
+
     return (
       <RichText.Content
-        tagName="p"
+        tagName="h4"
+        className={classes}
         value={content}
         style={{
-          textAlign: alignment,
-          backgroundColor: backgroundColor,
-          color: textColor,
+          textAlign: textAlignment,
+          backgroundColor: backgroundClass ? undefined : customBackgroundColor,
+          color: textClass ? undefined : customTextColor,
         }}
       />
     );

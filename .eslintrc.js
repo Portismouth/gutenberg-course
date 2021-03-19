@@ -8,6 +8,7 @@ module.exports = {
     wp: "readonly",
   },
   extends: ["eslint:recommended", "plugin:react/recommended", "prettier"],
+  parser: "babel-eslint",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
